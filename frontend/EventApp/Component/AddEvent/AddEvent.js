@@ -10,7 +10,7 @@ import {
     Image,
     TouchableOpacity,
     SafeAreaView,
-    RefreshControl, TextInput, Alert
+    RefreshControl, TextInput,  
 } from 'react-native';
 
 import { Icon } from 'react-native-elements';
@@ -21,12 +21,12 @@ import axios from "axios";
 
 
 
-export const AddEvent = () => {
+export const AddEvent = ({ navigation }) => {
     const [title, settitle] = useState('');
     const [EventDate, setEventDate] = useState('');
     const [created, setcreated] = useState('');
     const [createdby, setcreatedby] = useState('');
-
+    const [modalVisible, setModalVisible] = useState(false);
 
     ShowCurrentDate = () => {
 
@@ -61,6 +61,7 @@ export const AddEvent = () => {
         try {
             const received = await res.json();
             console.log(received);
+            setModalVisible(true);
             return received;
         }
         catch (error) {
@@ -76,7 +77,7 @@ export const AddEvent = () => {
                 style={{ paddingBottom: 50, paddingHorizontal: 20 }}>
                 <View style={{ alignItems: "center", marginTop: 15 }}>
                     <Text style={{ fontFamily: 'Poppins', fontSize: 16, color: '#C2C2C2' }}>
-                        Add Your Event</Text>
+                        Add Your Event </Text>
                     <Text>{created}</Text>
                 </View>
                 <Text style={styles.subtitle}>Title</Text>
@@ -164,6 +165,25 @@ export const AddEvent = () => {
                         </Text>
                     </View>
                 </TouchableOpacity>}
+                <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+         
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Event Added</Text>
+            <TouchableOpacity
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.textStyle}>Explore Events</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
             </ScrollView>
         </SafeAreaView>
     );
@@ -173,7 +193,49 @@ const styles = {
     subtitle: {
         fontFamily: 'Poppins', fontSize: 17, color: '#0298A6', marginVertical: 0,fontWeight: 'bold',
 marginStart:5
-    }
+    } ,centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+      },
+      modalView: {
+        margin: 20,
+        backgroundColor: '#F3FEFF',
+        borderRadius: 20,
+        padding: 80,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+      },
+      button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+        marginTop:30
+      },
+      buttonOpen: {
+        backgroundColor: '#F194FF',
+      },
+      buttonClose: {
+        backgroundColor: '#2196F3',
+      },
+      textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
+      modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+        fontSize:18
+      },
 
 }
 
